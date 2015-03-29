@@ -1,7 +1,6 @@
 <h3>flask-orientdb</h3>
-
+**not finished***
 ### Example 
-    import pyorient
     app = Flask(__name__) 
     client = OrientDB(orientdb_password, app=app)  
     if not client.db_exists('test_db', pyorient.STORAGE_TYPE_MEMORY ):
