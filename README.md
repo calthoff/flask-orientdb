@@ -1,4 +1,4 @@
-<h3>flask-orientdb</h3>
+<h3>Flask-OrientDB</h3>
 Flask-OrientDB simplifies using OrientDB with Flask by providing an interface to Pyorient Python driver.
 ### Example 
     from flask import Flask
@@ -15,15 +15,18 @@ Flask-OrientDB simplifies using OrientDB with Flask by providing an interface to
         client.command("insert into Animal set name = 'rat', specie = 'rodent'")
         db_size = client.db_size()
 
-### Default Configuration
-    'ORIENTDB_CURRENT_DATABASE'
-    'ORIENTDB_DATABASE_USERNAME'
-    'ORIENTDB_DATABASE_PASSWORD'
-    'ORIENTDB_AUTO_OPEN'
-    'ORIENTDB_SERVER_PASSWORD'
-    'ORIENTDB_SERVER_USERNAME'
-    'ORIENTDB_HOST'
-    'ORIENTDB_PORT'
+### Default Configuration Values
+    'ORIENTDB_CURRENT_DATABASE': None
+    'ORIENTDB_DATABASE_USERNAME': 'admin'
+    'ORIENTDB_DATABASE_PASSWORD': 'admin'
+    'ORIENTDB_AUTO_OPEN': True
+    'ORIENTDB_SERVER_PASSWORD': None
+    'ORIENTDB_SERVER_USERNAME': 'root'
+    'ORIENTDB_HOST': 'localhost'
+    'ORIENTDB_PORT' '2424'
+    
+    Set 'ORIENTDB_AUTO_OPEN' to False to stop Flask_OrientDB from automatically opening a database connection
+    to 'ORIENTDB_CURRENT_DATABASE' (if set) when a method requiring a connection is called.
     
 ### Edit Configuration
     client['ORIENTDB_CURRENT_DATABASE'] = 'new_db'
