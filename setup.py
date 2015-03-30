@@ -18,7 +18,7 @@ setup(
     author_email='coryedwardalthoff@gmail.com',
     description='A Flask extension for using OrientDB with Flask',
     long_description=__doc__,
-    #py_modules=['flask_mongokit'],
+    py_modules=['flask_orientdb'],
     zip_safe=False,
     platforms='any',
     install_requires=install_requires,
