@@ -24,9 +24,9 @@ a Python driver for OrientDB.
         
         db_size = client.db_size()
 
-### Methods
+### Usage
     Check Pyorient's documentation https://github.com/mogui/pyorient for a
-    complete list of methods.
+    complete list of commands.
 
 ### Default Configuration Values
     'ORIENTDB_CURRENT_DATABASE': None
