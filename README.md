@@ -21,7 +21,7 @@ Flask-OrientDB simplifies using OrientDB with Flask by providing an interface to
         db_size = client.db_size()
 
 ### Methods
-    Check Pyorient's documentation <https://github.com/mogui/pyorient> for a
+    Check Pyorient's documentation <https://github.com/mogui/pyorient>`_ for a
     complete list of methods.
 
 ### Default Configuration Values
@@ -32,7 +32,7 @@ Flask-OrientDB simplifies using OrientDB with Flask by providing an interface to
     'ORIENTDB_SERVER_PASSWORD': None
     'ORIENTDB_SERVER_USERNAME': 'root'
     'ORIENTDB_HOST': 'localhost'
-    'ORIENTDB_PORT' '2424'
+    'ORIENTDB_PORT' '2424' 
     
     Set 'ORIENTDB_AUTO_OPEN' to False to stop Flask_OrientDB from automatically
     opening a database connection to 'ORIENTDB_CURRENT_DATABASE' (if set) when a
@@ -40,20 +40,20 @@ Flask-OrientDB simplifies using OrientDB with Flask by providing an interface to
     
 ### Edit Configuration
     client['ORIENTDB_CURRENT_DATABASE'] = 'new_db'
-
+   
 ### API Documentation
-class flask_orientdb.OrientDB(app=None)
-This class is used to integrate OrientDB into a Flask application.
-Parameters:	
-
-connected()
-Returns connection status to OrientDB server
-
-init_app(app)
-Parameters:	
-This method connects your app with this extension. Flask- OrientDB handles connecting 
-and disconnecting from OrientDB
-
-teardown()
-Closes the connection to current OrientDB  database.
+    class flask_orientdb.OrientDB(app=None)
+    This class is used to integrate OrientDB into a Flask application.
+    Parameters:	
+    
+    connected()
+    Returns connection status to OrientDB server
+    
+    init_app(app)
+    Parameters:	
+    This method connects your app with this extension. Flask- OrientDB handles connecting 
+    and disconnecting from OrientDB
+    
+    teardown()
+    Closes the connection to current OrientDB  database.
 
