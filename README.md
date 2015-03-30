@@ -20,7 +20,7 @@ Flask-OrientDB simplifies using OrientDB with Flask by providing an interface to
         db_size = client.db_size()
 
 ### Methods
-    Check Pyorient's <a href="https://github.com/mogui/pyorient">Documentation</a> for a complete list of methods.
+    Check Pyorient's documentation <https://github.com/mogui/pyorient> for a complete list of methods.
 
 ### Default Configuration Values
     'ORIENTDB_CURRENT_DATABASE': None
