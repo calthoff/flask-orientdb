@@ -25,7 +25,7 @@ a Python driver for OrientDB.
         db_size = client.db_size()
 
 ### Methods
-    Check Pyorient's documentation <https://github.com/mogui/pyorient>`_ for a
+    Check Pyorient's documentation https://github.com/mogui/pyorient for a
     complete list of methods.
 
 ### Default Configuration Values
@@ -55,8 +55,8 @@ a Python driver for OrientDB.
     
     init_app(app)
     Parameters:	
-    This method connects your app with this extension. Flask- OrientDB handles connecting 
-    and disconnecting from OrientDB
+    This method connects your app with this extension. Flask- OrientDB handles 
+    connecting and disconnecting from OrientDB
     
     teardown()
     Closes the connection to current OrientDB  database.
