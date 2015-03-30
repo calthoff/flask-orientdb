@@ -8,12 +8,19 @@ Flask-OrientDB simplifies using OrientDB with Flask by providing an interface to
     if __name__ == '__main__':
         app = Flask(__name__)
         client = OrientDB(app=app, server_username='my_username', server_password='your_password')
+        
         if not client.db_exists('animal'):
             client.db_create('animal')
+            
         db_list = client.db_list()
+        
         client.command("create class Animal extends V")
         client.command("insert into Animal set name = 'rat', specie = 'rodent'")
+        
         db_size = client.db_size()
+
+### Methods
+    Check Pyorient's <a href="https://github.com/mogui/pyorient">Documentation</a> for a complete list of methods.
 
 ### Default Configuration Values
     'ORIENTDB_CURRENT_DATABASE': None
