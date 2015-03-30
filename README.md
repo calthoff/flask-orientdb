@@ -1,5 +1,5 @@
 <h3>flask-orientdb</h3>
-
+Flask-OrientDB simplifies using OrientDB with Flask by providing an interface to Pyorient Python driver.
 ### Example 
     from flask import Flask
     from flask.ext.orientdb import OrientDB
@@ -7,7 +7,7 @@
     
     if __name__ == '__main__':
         app = Flask(__name__)
-        client = OrientDB(app=app, password='B0FC9CF1CBEAD07351C4C30197C43BE2D611E94AFAFA7EF4B4AAD3262F7907DB')
+        client = OrientDB(app=app, password='your_password')
         if not client.db_exists('animal'):
             client.db_create('animal')
         db_list = client.db_list()
