@@ -1,3 +1,5 @@
+*Not finished yet
+
 <h3>Flask-OrientDB</h3>
 Flask-OrientDB simplifies using OrientDB with Flask by providing an interface to Pyorient, 
 a Python driver for OrientDB.
@@ -42,9 +44,6 @@ a Python driver for OrientDB.
     opening a database connection to 'ORIENTDB_CURRENT_DATABASE' (if set) when a
     method requiring a database connection is called.
     
-### Edit Configuration
-    client['ORIENTDB_CURRENT_DATABASE'] = 'new_db'
-   
 ### API Documentation
     class flask_orientdb.OrientDB(app=None)
     This class is used to integrate OrientDB into a Flask application.
