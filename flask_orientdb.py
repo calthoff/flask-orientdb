@@ -42,7 +42,15 @@ class OrientDB(object):
         # TODO is first part necessary
         app.extensions = getattr(app, 'extensions', {})
         app.extensions['orientdb'] = self
+        self.create_client()
 
+    def create_client(self):
+        ctx = stack
+        # TODO figure out how to use ctx.top
+        # create orientdb client
+        if not self.client_connected:
+            ctx.orientdb_client = OrientDBPy(self.app.config.get('ORIENTDB_HOST'),
+                                             self.app.config.get('ORIENTDB_PORT'))
     @property
     def client_connected(self):
         ctx = stack
@@ -62,14 +70,14 @@ class OrientDB(object):
     def teardown(self):
         """Close the connection to current OrientDB database."""
         ctx = stack
-        if hasattr(ctx, 'orientdb_client') and hasattr(ctx, 'orientdb_db_connection'):
-            ctx.orientdb_client.db_close()
-            del ctx.orientdb_db_connection
+        # if hasattr(ctx, 'orientdb_client') and hasattr(ctx, 'orientdb_db_connection'):
+        #     ctx.orientdb_client.db_close()
+        #     del ctx.orientdb_db_connection
 
     def shutdown(self):
         pass
 
-    def register_db(self, db_name, db_username, db_password):
+    def register_db(self, db_name, db_username="admin", db_password="admin"):
         Database = namedtuple('Database', 'db_name, db_username, db_password')
         new_db = Database(db_name, db_username, db_password)
         self.database_list.append(new_db)
@@ -81,15 +89,9 @@ class OrientDB(object):
                 self.current_database = named_db_tuple
 
     def __getattr__(self, name, *args, **kwargs):
-        connection_needed = ['db_size']
+        connection_needed = ['db_size', 'db_count_records']
         ctx = stack
         # TODO figure out how to use ctx.top
-        # create orientdb client
-        if not self.client_connected:
-            ctx.orientdb_client = OrientDBPy(self.app.config.get('ORIENTDB_HOST'),
-                                             self.app.config.get('ORIENTDB_PORT'))
-
-        # create orientdb server connection
         # TODO why do I need to do this each time
         ctx.orientdb_session_id = ctx.orientdb_client.connect(
             self.app.config.get('ORIENTDB_SERVER_USERNAME'), self.app.config.get('ORIENTDB_SERVER_PASSWORD'))
@@ -112,6 +114,7 @@ class OrientDB(object):
             if name == 'db_close':
                 del ctx.orientdb_client
                 del ctx.orientdb_session_id
+                # TODO???
                 return
             return getattr(ctx.orientdb_client, name)(*args, **kw)
         return wrapper

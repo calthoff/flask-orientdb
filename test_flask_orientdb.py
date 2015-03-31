@@ -6,15 +6,19 @@ import unittest
 class FlaskOrientDBTests(unittest.TestCase):
     def setUp(self):
         self.app = Flask(__name__)
-        self.db_name = 'test_db'
+        self.db_name = 'c123'
         self.client = OrientDB(app=self.app,
-                               server_password="B0FC9CF1CBEAD07351C4C30197C43BE2D611E94AFAFA7EF4B4AAD3262F7907DB",
-                               database_name=self.db_name)
-        if not self.client.db_exists('test_db'):
-            self.client.db_create('test_db')
+                               server_password="B0FC9CF1CBEAD07351C4C30197C43BE2D611E94AFAFA7EF4B4AAD3262F7907DB")
+        self.client.register_db(self.db_name)
+        self.client.set_current_db(self.db_name)
+        if not self.client.db_exists(self.db_name):
+            self.client.db_create(self.db_name)
 
-    def tearDown(self):
-        pass
+    #
+    # def tearDown(self):
+    #     if self.client.db_exists(self.db_name):
+    #         self.client.db_drop(self.db_name)
+
     def test_flaskorient_config(self):
         self.assertEqual(self.app.config['ORIENTDB_HOST'], 'localhost')
         self.assertEqual(self.app.config['ORIENTDB_PORT'], 2424)
@@ -59,7 +63,7 @@ class FlaskOrientDBTests(unittest.TestCase):
         self.assertIsInstance(self.client.db_open(self.db_name), list)
 
         self.client.db_close()
-        assert self.client.server_connection is None
+        assert self.client.server_connected is None
         assert self.client.db_connection is None
 
         self.assertIsInstance(self.db_list(), dict)
@@ -77,3 +81,4 @@ class FlaskOrientDBTests(unittest.TestCase):
         self.assertIsInstance(self.client.db_reload(), list)
 
 # TODO test to test if flask is calling teardown
+# TODO test opening without connection
