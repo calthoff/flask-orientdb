@@ -7,49 +7,50 @@ a Python driver for OrientDB.
 ### Installation
 
 ### Example 
+
+
     from flask import Flask
-from flask.ext.orientdb import OrientDB
-
-
-if __name__ == '__main__':
-    app = Flask(__name__)
-    client = OrientDB(app=app, server_password=your_password)
+    from flask.ext.orientdb import OrientDB
     
-    if not client.db_exists('animal'):
-        client.db_create("animal", 'graph', 'plocal')
-
-    client.set_current_db('animal')
-
-    # Create the Vertex Animal
-    client.command("create class Animal extends V")
-
-    # Insert a new value
-    client.command("insert into Animal set name = 'rat', specie = 'rodent'")
-
-    # query the values
-    client.query("select * from Animal")
-
-    # Create the vertex and insert the food values
-
-    client.command('create class Food extends V')
-    client.command("insert into Food set name = 'pea', color = 'green'")
-
-    # Create the edge for the Eat action
-    client.command('create class Eat extends E')
-
-    # Lets the rat likes to eat pea
-    eat_edges = client.command(
-        "create edge Eat from ("
-        "select from Animal where name = 'rat'"
-        ") to ("
-        "select from Food where name = 'pea'"
-        ")"
-    )
-
-    # Who eats the peas?
-    pea_eaters = client.command("select expand( in( Eat )) from Food where name = 'pea'")
-    for animal in pea_eaters:
-        print(animal.name, animal.specie)
+    if __name__ == '__main__':
+        app = Flask(__name__)
+        client = OrientDB(app=app, server_password=your_password)
+        
+        if not client.db_exists('animal'):
+            client.db_create("animal", 'graph', 'plocal')
+    
+        client.set_current_db('animal')
+    
+        # Create the Vertex Animal
+        client.command("create class Animal extends V")
+    
+        # Insert a new value
+        client.command("insert into Animal set name = 'rat', specie = 'rodent'")
+    
+        # query the values
+        client.query("select * from Animal")
+    
+        # Create the vertex and insert the food values
+    
+        client.command('create class Food extends V')
+        client.command("insert into Food set name = 'pea', color = 'green'")
+    
+        # Create the edge for the Eat action
+        client.command('create class Eat extends E')
+    
+        # Lets the rat likes to eat pea
+        eat_edges = client.command(
+            "create edge Eat from ("
+            "select from Animal where name = 'rat'"
+            ") to ("
+            "select from Food where name = 'pea'"
+            ")"
+        )
+    
+        # Who eats the peas?
+        pea_eaters = client.command("select expand( in( Eat )) from Food where name = 'pea'")
+        for animal in pea_eaters:
+            print(animal.name, animal.specie)
 
 ### Usage
     Check Pyorient's documentation https://github.com/mogui/pyorient for a
