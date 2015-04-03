@@ -59,25 +59,25 @@ a database connection is called.
     
 ### API Documentation
 <i>class</i> flask_orientdb.<b>OrientDB</b>(<i>app=app, server_username='root', server_password=None host=host, port=port</i>)
-This class is used to integrate OrientDB into a Flask application.
+<br>This class is used to integrate OrientDB into a Flask application.
 <br><b>Parameters</b>:	
-<b>app</b> - The Flask application will be bound to this MongoKit instance. If an app is not provided at                  initialization time than it must be provided later by calling init_app() manually.
+<i>app</i> - The Flask application will be bound to this MongoKit instance. If an app is not provided at                  initialization time than it must be provided later by calling init_app() manually.
 
-<b>server_username</b>- Username of the OrientDB server to connect to. 
+<i>server_username</i>- Username of the OrientDB server to connect to. 
 
-<b>server_password</b>- Password of the OrientDB server to connect to. 
+<i>server_password</i>- Password of the OrientDB server to connect to. 
 
-<b>host</b>- The address of the OrientDB server to connect to. 
+<i>host</i>- The address of the OrientDB server to connect to. 
 
-<b>port</b>- The port of the OrientDB server to connect to.
+<i>port</i>- The port of the OrientDB server to connect to.
 
-<b>client_connected()</b><br>
+<b>client_connected</b><br>
     Returns whether the client is connected
 
-<b>database_connected()</b><br>
-    Returns database connection status to OrientDB server
-    server_connected()
-    Returns whether the server is connected
+<b>database_connected</b><br>
+    &#09;Returns database connection status to OrientDB server
+    &#09;server_connected()
+    &#09;Returns whether the server is connected
 
 <b>init_app(<i>app=app, server_username='root', server_password=None                                                     host=host, port=port</i>)</b><br>
     This method connects your app with this extension. Flask- OrientDB handles 
@@ -87,4 +87,6 @@ This class is used to integrate OrientDB into a Flask application.
 <b>set_current_db(<i>db_name, db_username=admin, db_password=admin</i>)</b><br>
     Set the database you want to use. When current_db is called, it registers your database so if you've already 
     called set__current_db on one of your databases, the second time you call it you do not need to provide a          password. Username and password default to admin because new OrientDB databases default to admin when they are     created.
-   
+  
+<b>server_connected():
+  Returns server connection status to OrientDB server
