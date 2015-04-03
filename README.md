@@ -2,7 +2,7 @@
 
 <h3>Flask-OrientDB</h3>
 Flask-OrientDB simplifies using OrientDB with Flask by providing an interface to Pyorient, 
-a Python driver for OrientDB, and providing support for using multiple OrientDB databases.
+a Python driver for OrientDB, and makes it easy to manage multiple OrientDB databases.
 
 ### Installation
 
@@ -64,16 +64,16 @@ a database connection is called.
 ### API Documentation
 <i>class</i> flask_orientdb.<b>OrientDB</b>(app=app, server_username='root', server_password=None host=host, port=port)
 This class is used to integrate OrientDB into a Flask application.
-<b>Parameters</b>:	
-app - The Flask application will be bound to this MongoKit instance. If an app is not provided at                  initialization time than it must be provided later by calling init_app() manually.
+<br><b>Parameters</b>:	
+<b>app</b> - The Flask application will be bound to this MongoKit instance. If an app is not provided at                  initialization time than it must be provided later by calling init_app() manually.
 
-server_username- Username of the OrientDB server to connect to. 
+<b>server_username</b>- Username of the OrientDB server to connect to. 
 
-server_password- Password of the OrientDB server to connect to. 
+<b>server_password</b>- Password of the OrientDB server to connect to. 
 
-host- The address of the OrientDB server to connect to. 
+<b>host</b>- The address of the OrientDB server to connect to. 
 
-port- The port of the OrientDB server to connect to.
+<b>port</b>- The port of the OrientDB server to connect to.
 
 <b>client_connected()</b>
 Returns whether the client is connected
