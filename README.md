@@ -58,7 +58,7 @@ a database connection is called.
     app.config['ORIENTDB_AUTO_OPEN'] = False
     
 ### API Documentation
-<i>class</i> flask_orientdb.<b>OrientDB</b>(<i>app=app, server_username='root', server_password=None host=host, port=port</i>)
+<i>class</i> flask_orientdb.<b>OrientDB</b>(<i>app=app, server_username='root', server_password=None host='localhost', port=2424</i>)
 <br>This class is used to integrate OrientDB into a Flask application.
 <br><b>Parameters</b>:	
 <i>app</i> - The Flask application will be bound to this MongoKit instance. If an app is not provided at                  initialization time than it must be provided later by calling init_app() manually.
@@ -75,18 +75,19 @@ a database connection is called.
     Returns whether the client is connected
 
 <b>database_connected</b><br>
-    &#09;Returns database connection status to OrientDB server
-    &#09;server_connected()
-    &#09;Returns whether the server is connected
+Returns database connection status to OrientDB server
+
+<b>server_connected()</b>
+Returns whether the server is connected
 
 <b>init_app(<i>app=app, server_username='root', server_password=None                                                     host=host, port=port</i>)</b><br>
     This method connects your app with this extension. Flask- OrientDB handles 
     connecting and disconnecting from OrientDB
     Parameters:	Same as __init__ parameters. 
 
-<b>set_current_db(<i>db_name, db_username=admin, db_password=admin</i>)</b><br>
+<b>set_current_db(</b><i>db_name, db_username=admin, db_password=admin</i><b>)</b><br>
     Set the database you want to use. When current_db is called, it registers your database so if you've already 
     called set__current_db on one of your databases, the second time you call it you do not need to provide a          password. Username and password default to admin because new OrientDB databases default to admin when they are     created.
   
-<b>server_connected():
-  Returns server connection status to OrientDB server
+<b>server_connected()</b>
+  <br>Returns server connection status to OrientDB server
