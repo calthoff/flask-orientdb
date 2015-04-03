@@ -12,7 +12,7 @@ a Python driver for OrientDB, and makes it easy to manage multiple OrientDB data
     
     app = Flask(__name__)
     client = OrientDB(app=app, server_username=your_username, 
-    server_password=your_password)
+                     server_password=your_password)
     client.set_current_db('animal')
     
     @app.route("/")
@@ -58,7 +58,8 @@ a database connection is called.
     
 ### Edit Configuration
     app = Flask(__name__)
-    client = OrientDB(app=app, server_password=your_password)
+    client = OrientDB(app=app, server_username=your_username, 
+                     server_password=your_password)
     app.config['ORIENTDB_AUTO_OPEN'] = False
     
 ### API Documentation
