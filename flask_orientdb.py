@@ -8,49 +8,52 @@ from collections import namedtuple
 # TODO check what pyorient.STORAGE_TYPE_MEMORY does
 
 
-def createdb_args(name, args):
-    if args[1] == 'graph':
+def db_create(name, type , memory):
+    if type == 'graph':
         # args = (args[0], pyorient.DB_TYPE_GRAPH)
         db_type = pyorient.DB_TYPE_GRAPH
-    elif args[1] == 'document':
+    elif type == 'document':
         # args = (args[0], pyorient.DB_TYPE_DOCUMENT)
         db_type =pyorient.DB_TYPE_DOCUMENT
     else:
         raise Exception('invalid argument provided to create_db()')
-    if args[2] == 'local':
+    if memory == 'local':
         memory_location = pyorient.STORAGE_TYPE_LOCAL
-    elif args[2] == 'plocal':
+    elif memory == 'plocal':
         memory_location  = pyorient.STORAGE_TYPE_PLOCAL
-    elif args[2] == 'memory':
+    elif memory == 'memory':
         memory_location = pyorient.STORAGE_TYPE_MEMORY
     else:
         raise Exception('invalid argument provided to createdb()')
-    return (name, db_type, memory_location)
+    return name, db_type, memory_location
+
+def data_cluster_add(cluster_name, type):
+    if type == 'physical':
+        cluster_type = pyorient.CLUSTER_TYPE_PHYSICAL
+    elif type == 'memory':
+        cluster_type = pyorient.CLUSTER_TYPE_MEMORY
+    return cluster_name, cluster_type
 
 class OrientDB(object):
-    def __init__(self, app=None, database_name=None, database_username='admin', database_password='admin',
-                 server_password=None, server_username='root', host='localhost', port=2424):
+    def __init__(self, app=None, server_un='root', server_pw=None, host='localhost', port=2424):
         self.database_list = []
         self.current_database = None
         if app is not None:
             self.app = app
-            self.init_app(self.app, database_name=database_name, database_username=database_username,
-                          database_password=database_password, server_password=server_password,
-                          server_username=server_username, host=host, port=port)
+            self.init_app(self.app, server_username=server_un, server_password=server_pw, host=host, port=port)
         else:
             self.app = None
 
-    def init_app(self, app, database_name=None, database_username="admin", database_password="admin",
-                 server_password=None, server_username='root', host='localhost', port=2424):
+    def init_app(self, app, server_pw, server_un='root', host='localhost', port=2424):
         """
         Sets up configuration and adds teardown methods to Flask.
         """
         self.app = app
-        if database_name:
-            self.current_database = self.register_db(database_name, database_username, database_password)
+        # if database_name:
+        #     self.current_database = self.register_db(database_name, database_username, database_password)
         self.app.config.setdefault('ORIENTDB_AUTO_OPEN', True)
-        self.app.config.setdefault('ORIENTDB_SERVER_PASSWORD', server_password)
-        self.app.config.setdefault('ORIENTDB_SERVER_USERNAME', server_username)
+        self.app.config.setdefault('ORIENTDB_SERVER_PASSWORD', server_pw)
+        self.app.config.setdefault('ORIENTDB_SERVER_USERNAME', server_un)
         self.app.config.setdefault('ORIENTDB_HOST', host)
         self.app.config.setdefault('ORIENTDB_PORT', port)
         # Use the newstyle teardown_appcontext if it's available,
@@ -88,12 +91,12 @@ class OrientDB(object):
         self._connect_to_server()
         return ctx.orientdb_db_connection
 
-    def _teardown(self):
+    def _teardown(self, arg1):
         """Close the connection to current OrientDB database."""
         ctx = stack
-        # if hasattr(ctx, 'orientdb_client') and hasattr(ctx, 'orientdb_db_connection'):
-        # ctx.orientdb_client.db_close()
-        #     del ctx.orientdb_db_connection
+        if hasattr(ctx, 'orientdb_client') and hasattr(ctx, 'orientdb_db_connection'):
+            ctx.orientdb_client.db_close()
+            del ctx.orientdb_db_connection
 
     def _shutdown(self):
         pass
@@ -139,7 +142,7 @@ class OrientDB(object):
         if not self.client_connected:
             self._create_client()
         self._connect_to_server()
-        connection_needed = ['db_size', 'db_count_records', 'command']
+        connection_needed = ['db_size', 'db_count_records', 'command', 'query', 'data_cluster_add']
         # TODO why do I need to connect to server each time
         self._connect_to_server()
         # create database connection if needed
@@ -150,14 +153,11 @@ class OrientDB(object):
                 'Error either ORIENTDB_CURRENT_DATABASE is not configured or ORIENTDB_AUTO_OPEN is set to False')
 
         def wrapper(*args, **kw):
-            # TODO database create already exists corrupts db
+            # TODO database create already exists corrupts db in memory setting
             if name == 'db_create':
-                if len(args) < 2:
-                    raise Exception("Must provide 2 arguments")
-                args = createdb_args(args[0], args)
-            # if name == 'db_open':
-            #     # TODO check order username, password
-            #     args = (args[0], self.current_database.db_username, self.current_database.db_password)
+                args = db_create(args[0], args[1], args[2])
+            if name == 'data_cluster_add':
+                args = data_cluster_add(args[0], args[1])
             if name == 'db_close':
                 del ctx.orientdb_client
                 del ctx.orientdb_session_id

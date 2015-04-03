@@ -7,7 +7,8 @@ import pyorient
 class FlaskOrientDBTests(unittest.TestCase):
     def setUp(self):
         self.app = Flask(__name__)
-        self.db_name = 'test_db2345'
+        self.db_name = 'the_new_db5'
+        self.cluster_name = 'my_test_cluster'
         self.password = "B0FC9CF1CBEAD07351C4C30197C43BE2D611E94AFAFA7EF4B4AAD3262F7907DB"
         self.client = OrientDB(app=self.app,
                                server_password=self.password)
@@ -26,10 +27,6 @@ class FlaskOrientDBTests(unittest.TestCase):
         self.assertEqual(self.app.config['ORIENTDB_SERVER_USERNAME'], 'root')
         self.assertIsInstance(self.app.config['ORIENTDB_SERVER_PASSWORD'], str)
         self.assertEqual(self.app.config['ORIENTDB_AUTO_OPEN'], True)
-
-    # def test_flaskorient_session(self):
-    # #unittest.TestCase.assertIsInstance(self.connection(), int)
-    #     self.assertIsInstance(self.app.ctx, int)
 
     def test_create_client(self):
         self.assertIsInstance(self.client._create_client(), pyorient.orient.OrientDB)
@@ -62,7 +59,7 @@ class FlaskOrientDBTests(unittest.TestCase):
     def test_db_size(self):
         self.assertIsInstance(self.client.db_size(), int)
 
-    def test_db_get_records(self):
+    def test_db_count_records(self):
         self.assertIsInstance(self.client.db_count_records(), int)
 
     def test_make_a_query(self):
@@ -77,18 +74,30 @@ class FlaskOrientDBTests(unittest.TestCase):
 
 
     # pyorient methods that call __attr__ in flask-orientdb
-    # def test_create_drop_db(self):
-    #     test_db2 = 'test_db234'
-    #     self.client.db_create(test_db2, 'graph', 'plocal')
-    #     assert self.client.db_exists(test_db2) is True
-    #     self.client.db_drop(test_db2)
-    #     assert self.client.db_exists(test_db2) is False
+    def test_create_drop_db(self):
+        test_db2 = 'cd_test'
+        self.client.db_create(test_db2, 'graph', 'plocal')
+        assert self.client.db_exists(test_db2) is True
+        self.client.db_drop(test_db2)
+        assert self.client.db_exists(test_db2) is False
 
-    def test_open_a_db(self):
-        self.assertIsInstance(self.client.open(self.db_name, 'admin', 'admin'), list)
+    def test_db_open(self):
+        self.assertIsInstance(self.client.db_open(self.db_name, 'admin', 'admin'), list)
 
     def test_command(self):
         self.assertIsInstance(self.client.command( "create class my_class extends V" ), list)
+
+    def test_data_cluster_add(self):
+        self.assertIsInstance(self.client.data_cluster_add(self.cluster_name, 'physical'), int)
+
+    # def test_data_cluster_drop(self):
+        delete_cluster = 'delete_cluster'
+        #self.client.data_cluster_add(delete_cluster, 'physical')
+    #     assert self.client.data_cluster_drop(delete_cluster) is True
+    #     self.client.db_close()
+
+    def test_data_cluster_data_range(self):
+        self.assertIsInstance(self.client.data_cluster_data_range(self.cluster_name), list)
 
     def test_db_exists(self):
         assert self.client.db_exists( self.db_name, 'plocal') is True
