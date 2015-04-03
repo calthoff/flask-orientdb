@@ -11,21 +11,22 @@ a Python driver for OrientDB, and providing support for using multiple OrientDB 
     from flask.ext.orientdb import OrientDB
     
     app = Flask(__name__)
-    client = OrientDB(app=app, server_username=your_username, server_password=your_password)
+    client = OrientDB(app=app, server_username=your_username, 
+    server_password=your_password)
     client.set_current_db('animal')
     
     @app.route("/")
     def cheese_eating_animals():
         client.query("select * from Animal")
-        animal_list = []
-        cheese_eaters = client.command("select expand( in( Eat )) from Food where name = 'pea'")
+        cheese_eaters = client.command("select expand( in( Eat )) \
+        from Food where name = 'pea'")
         return ','.join([cheese_eaters[0].name, cheese_eaters[0].species])
     
     if __name__ == "__main__":
             app.run()
             
-    #For this example to work you need a database and schema set up, please see the example 
-    folder for a working demo.
+    #For this example to work you need a database and schema set up, please see
+    the example folder for a working demo.
 
 ### Pyorient Commands
 Check Pyorient's documentation https://github.com/mogui/pyorient for a
@@ -33,12 +34,15 @@ complete list of commands.
 
 ### Multiple Databases
     app = Flask(__name__)
-    client = OrientDB(app=app, server_username=your_username, server_password=your_password)
+    client = OrientDB(app=app, server_username=your_username, 
+                     server_password=your_password)
     
-    client.set_current_db('db_one', username=your_username, password=your_password)
+    client.set_current_db('db_one', username=your_username, 
+                         password=your_password)
     db_one_length = client.db_size()
     
-    client.set_current_db('db_two', username=your_username, password=your_password)
+    client.set_current_db('db_two', username=your_username, 
+                         password=your_password)
     db_two_length = client.db_size()
 
 ### Default Configuration Values
@@ -49,8 +53,8 @@ complete list of commands.
 'ORIENTDB_PORT' '2424'  <br>
 
 Set 'ORIENTDB_AUTO_OPEN' to False to stop Flask_OrientDB from automatically
-opening a database connection to self.current_database when a
-method requiring a database connection is called.
+opening a database connection to self.current_database when a method requiring
+a database connection is called.
     
 ### Edit Configuration
     app = Flask(__name__)
@@ -58,9 +62,9 @@ method requiring a database connection is called.
     app.config['ORIENTDB_AUTO_OPEN'] = False
     
 ### API Documentation
-class flask_orientdb.OrientDB(app=app, server_username='root', server_password=None host=host, port=port)
+<i>class</i> flask_orientdb.<b>OrientDB</b>(app=app, server_username='root', server_password=None host=host, port=port)
 This class is used to integrate OrientDB into a Flask application.
-Parameters:	
+<b>Parameters</b>:	
 app - The Flask application will be bound to this MongoKit instance. If an app is not provided at                  initialization time than it must be provided later by calling init_app() manually.
 
 server_username- Username of the OrientDB server to connect to. 
