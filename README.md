@@ -8,56 +8,24 @@ the same server.
 ### Installation
 
 ### Example 
-
-
     from flask import Flask
     from flask.ext.orientdb import OrientDB
     
     app = Flask(__name__)
-    
     client = OrientDB(app=app, server_password=your_password)
-    if client.db_exists('animal'):
-         client.db_drop('animal')
-    client.db_create("animal", 'graph', 'plocal')
     client.set_current_db('animal')
     
-    def setup_db():
-        # Create the Vertex Animal
-        client.command("create class Animal extends V")
-    
-        # # Insert a new value
-        client.command("insert into Animal set name = 'rat', specie = 'rodent'")
-        # Create the vertex and insert the food values
-    
-        client.command('create class Food extends V')
-        client.command("insert into Food set name = 'pea', color = 'green'")
-    
-         # # Create the edge for the Eat action
-        client.command('create class Eat extends E')
-    
     @app.route("/")
-    def animals():
-        # query the values
+    def cheese_eating_animals():
         client.query("select * from Animal")
-    
-        eat_edges = client.command(
-            "create edge Eat from ("
-            "select from Animal where name = 'rat'"
-            ") to ("
-            "select from Food where name = 'pea'"
-            ")"
-        )
-    
-        # Who eats the peas?
         animal_list = []
-        pea_eaters = client.command("select expand( in( Eat )) from Food where name = 'pea'")
-        for animal in pea_eaters:
-            animal_list.append([animal.name, animal.specie])
-        return ' '.join(animal_list[0])
+        cheese_eaters = client.command("select expand( in( Eat )) from Food where name = 'pea'")
+        return ','.join([cheese_eaters[0].name, cheese_eaters[0].species])
     
     if __name__ == "__main__":
-        setup_db()
-        app.run()
+            app.run()
+            
+    #For this example to work you need a database and schema set up, please see the example folder for a working       demo
 
 ### Pyorient Commands
     Check Pyorient's documentation https://github.com/mogui/pyorient for a
@@ -84,24 +52,39 @@ the same server.
     opening a database connection to self.current_database when a
     method requiring a database connection is called.
     
+### Edit Configuration
+    app = Flask(__name__)
+    client = OrientDB(app=app, server_password=your_password)
+    app.config['ORIENTDB_AUTO_OPEN'] = False
+    
 ### API Documentation
-    class flask_orientdb.OrientDB(app=None)
+    class flask_orientdb.OrientDB(app=app, server_username='root', server_password=None                                         host=host, port=port)
     This class is used to integrate OrientDB into a Flask application.
     Parameters:	
+    app - The Flask application will be bound to this MongoKit instance. If an app is not provided at                  initialization time than it must be provided later by calling init_app() manually.
+    
+    server_username- Username of the OrientDB server to connect to. 
+    
+    server_password- Password of the OrientDB server to connect to. 
+    
+    host- The address of the OrientDB server to connect to. 
+    
+    port- The port of the OrientDB server to connect to.
     
     client_connected():
     Returns whether the client is connected
     
-    server_connected():
-    returns whether the server is connected
-    
     database_connected()
     Returns database connection status to OrientDB server
-    
-    set_current_db(db_name, db_username=admin, db_password=admin)
-    Set the database you want to use
-    
-    init_app(app)
-    Parameters:	
+    server_connected():
+    Returns whether the server is connected
+ 
+    init_app(app=app, server_username='root', server_password=None                                                     host=host, port=port)
     This method connects your app with this extension. Flask- OrientDB handles 
     connecting and disconnecting from OrientDB
+    Parameters:	Same as __init__ parameters. 
+
+    set_current_db(db_name, db_username=admin, db_password=admin)
+    Set the database you want to use. When current_db is called, it registers your database so if you've already 
+    called set__current_db on one of your databases, the second time you call it you do not need to provide a          password. Username and password default to admin because new OrientDB databases default to admin when they are     created.
+   
