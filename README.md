@@ -78,9 +78,9 @@ a database connection is called.
 Returns database connection status to OrientDB server
 
 <b>init_app(</b><i>app=app, server_username='root', server_password=None                                                     host=host, port=port</i><b>)</b><br>
-    &nbsp;&nbsp;&nbsp;&nbsp;This method connects your app with this extension. Flask- OrientDB handles 
-    &nbsp;&nbsp;&nbsp;&nbsp;connecting and disconnecting from OrientDB
-    &nbsp;&nbsp;&nbsp;&nbsp;Parameters:	Same as __init__ parameters. 
+    &nbsp;&nbsp;This method connects your app with this extension. Flask- OrientDB handles <br>
+    &nbsp;&nbsp;connecting and disconnecting from OrientDB <br>
+    &nbsp;&nbsp;Parameters:	Same as __init__ parameters.  <br>
 
 <b>set_current_db(</b><i>db_name, db_username=admin, db_password=admin</i><b>)</b><br>
     Set the database you want to use. When current_db is called, it registers your database so if you've already 
