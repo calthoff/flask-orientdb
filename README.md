@@ -2,8 +2,7 @@
 
 <h3>Flask-OrientDB</h3>
 Flask-OrientDB simplifies using OrientDB with Flask by providing an interface to Pyorient, 
-a Python driver for OrientDB, and adding support for multiple OrientDB databases on
-the same server.
+a Python driver for OrientDB, and providing support for using multiple OrientDB databases.
 
 ### Installation
 
