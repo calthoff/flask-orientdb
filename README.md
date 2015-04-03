@@ -42,11 +42,11 @@ complete list of commands.
     db_two_length = client.db_size()
 
 ### Default Configuration Values
-'ORIENTDB_AUTO_OPEN': True
-'ORIENTDB_SERVER_PASSWORD': None
-'ORIENTDB_SERVER_USERNAME': 'root'
-'ORIENTDB_HOST': 'localhost'
-'ORIENTDB_PORT' '2424' 
+'ORIENTDB_AUTO_OPEN': True <br>
+'ORIENTDB_SERVER_PASSWORD': None <br>
+'ORIENTDB_SERVER_USERNAME': 'root' <br>
+'ORIENTDB_HOST': 'localhost' <br>
+'ORIENTDB_PORT' '2424'  <br>
 
 Set 'ORIENTDB_AUTO_OPEN' to False to stop Flask_OrientDB from automatically
 opening a database connection to self.current_database when a
@@ -71,20 +71,20 @@ host- The address of the OrientDB server to connect to.
 
 port- The port of the OrientDB server to connect to.
 
-client_connected():
+<b>client_connected()</b>
 Returns whether the client is connected
 
-database_connected()
+<b>database_connected()</b>
 Returns database connection status to OrientDB server
-server_connected():
+server_connected()
 Returns whether the server is connected
 
-init_app(app=app, server_username='root', server_password=None                                                     host=host, port=port)
+<b>init_app(app=app, server_username='root', server_password=None                                                     host=host, port=port)</b>
 This method connects your app with this extension. Flask- OrientDB handles 
 connecting and disconnecting from OrientDB
 Parameters:	Same as __init__ parameters. 
 
-set_current_db(db_name, db_username=admin, db_password=admin)
+<b>set_current_db(db_name, db_username=admin, db_password=admin)</b>
 Set the database you want to use. When current_db is called, it registers your database so if you've already 
 called set__current_db on one of your databases, the second time you call it you do not need to provide a          password. Username and password default to admin because new OrientDB databases default to admin when they are     created.
    
