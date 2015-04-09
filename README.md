@@ -40,6 +40,10 @@ complete list of commands.
     
     client.set_current_db('db_two', server_un=your_un, server_pw=your_pw)
     db_two_length = client.db_size()
+    
+    # only have to enter password once
+    client.set_current_db('db_one')
+    
 
 ### Default Configuration Values
 'ORIENTDB_AUTO_OPEN': True <br>
@@ -57,36 +61,4 @@ a database connection is called.
     client = OrientDB(app=app, server_un=your_un, server_pw=your_pw)
     app.config['ORIENTDB_AUTO_OPEN'] = False
     
-### API Documentation
-<i>class</i> flask_orientdb.<b>OrientDB</b>(<i>app=app, server_username='root', server_password=None host='localhost', port=2424</i>)
-<br>This class is used to integrate OrientDB into a Flask application.
-<br><i>Parameters</i>:	
-<i>app</i> - The Flask application will be bound to this MongoKit instance. If an app is not provided at                  initialization time than it must be provided later by calling init_app() manually.
 
-<i>server_username</i>- Username of the OrientDB server to connect to. 
-
-<i>server_password</i>- Password of the OrientDB server to connect to. 
-
-<i>host</i>- The address of the OrientDB server to connect to. 
-
-<i>port</i>- The port of the OrientDB server to connect to.
-
-<b>client_connected</b><br>
-    Returns whether the client is connected
-
-<b>database_connected</b><br>
-Returns database connection status to OrientDB server
-
-<b>init_app(</b><i>app=app, server_username='root', server_password=None                                                     host='localhost', port=2424</i><b>)</b><br>
-This method connects your app with this extension. Flask- OrientDB handles connecting and disconnecting from OrientDB 
-<br><i>Parameters:</i><br>	Same as __init__ parameters.  
-
-<b>set_current_db(</b><i>db_name, db_username=admin, db_password=admin</i><b>)</b><br>
-Set the database you want to use. When current_db is called, it registers 
-your database so if you've already called set__current_db on one of your      
-databases, the second time you call it you do not need to provide a password. Username 
-and password default to admin because new OrientDB databases default to admin when they
-are created.
-  
-<b>server_connected</b>
-  <br>Returns server connection status to OrientDB server
