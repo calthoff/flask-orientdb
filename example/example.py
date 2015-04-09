@@ -3,7 +3,7 @@ from flask.ext.orientdb import OrientDB
 
 app = Flask(__name__)
 app.debug = True
-client = OrientDB(app=app, server_password=your_password)
+client = OrientDB(app=app, server_pw="B0FC9CF1CBEAD07351C4C30197C43BE2D611E94AFAFA7EF4B4AAD3262F7907DB")
 client.set_current_db('animal')
 
 @app.route("/")

@@ -1,5 +1,5 @@
 from flask.ext.orientdb import OrientDB
-
+from flask import Flask
 
 def setup_db():
     client.db_create('animal', 'graph', 'plocal')
@@ -27,6 +27,8 @@ def setup_db():
     )
 
 if __name__ == '__main__':
-    client = OrientDB(server_password=your_password)
-    if not client.db_exists():
-        setup_db()
+    app = Flask(__name__)
+    client = OrientDB(app=app, server_pw='B0FC9CF1CBEAD07351C4C30197C43BE2D611E94AFAFA7EF4B4AAD3262F7907DB')
+    with app.app_context():
+        if not client.db_exists():
+            setup_db()
