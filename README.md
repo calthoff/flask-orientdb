@@ -12,10 +12,10 @@ a Python driver for OrientDB, and makes it easy to manage multiple OrientDB data
     
     app = Flask(__name__)
     client = OrientDB(app=app, server_un=your_un, server_pw=your_pw)
-    client.set_current_db('animal')
-    
+  
     @app.route("/")
     def cheese_eating_animals():
+	client.set_current_db('animal')
         client.query("select * from Animal")
         cheese_eaters = client.command("select expand( in( Eat )) \
         from Food where name = 'pea'")
