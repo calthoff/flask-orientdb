@@ -1,28 +1,21 @@
 import sys
 from setuptools import setup
 
-install_requires = [
-    "Flask",
-    "pyorient"
-]
-
-if sys.version_info < (2, 6):
-    install_requires.append('simplejson')
-
 setup(
     name='Flask-OrientDB',
+    py_modules=['Flask-OrientDB'],
     version='0.1',
-    url='http://github.com/calthoff/flask-orientdb',
     license='BSD',
-    author='Cory Althoff',
-    author_email='coryedwardalthoff@gmail.com',
     description='A Flask extension for using OrientDB with Flask',
     long_description=__doc__,
+    author='Cory Althoff',
+    author_email='coryedwardalthoff@gmail.com',
+    url='http://github.com/calthoff/flask-orientdb',
     py_modules=['flask_orientdb'],
+    install_requires= ['Flask', 'pyorient'],
     zip_safe=False,
+    include_package_data=True,
     platforms='any',
-    install_requires=install_requires,
-    test_suite='tests.suite',
     classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Web Environment',

@@ -35,8 +35,7 @@ def data_cluster_add(cluster_name, type):
 
 class OrientDB(object):
     def __init__(self, app=None, server_un='root', server_pw=None, host='localhost', port=2424):
-        self.database_list = []
-        self.current_database = None
+        self.Database = namedtuple('Database', 'db_name, db_username, db_password')
         if app is not None:
             self.init_app(app, server_un=server_un, server_pw=server_pw, host=host, port=port)
         else:
@@ -46,14 +45,15 @@ class OrientDB(object):
         """
         Sets up configuration and adds teardown methods to Flask.
         """
-        # if not self.app:
-        #     raise Exception(' pass in a valid flask app')
+        if not app:
+            raise Exception('pass in a flask app')
         self.app = app
         self.app.config.setdefault('ORIENTDB_AUTO_OPEN', True)
         self.app.config.setdefault('ORIENTDB_SERVER_PASSWORD', server_pw)
         self.app.config.setdefault('ORIENTDB_SERVER_USERNAME', server_un)
         self.app.config.setdefault('ORIENTDB_HOST', host)
         self.app.config.setdefault('ORIENTDB_PORT', port)
+        self.app.config.setdefault('ORIENTDB_DB', None)
         # Use the newstyle teardown_appcontext if it's available,
         # otherwise faargsll back to the request context
         if hasattr(app, 'teardown_appcontext'):
@@ -64,63 +64,52 @@ class OrientDB(object):
         if 'orientdb' not in app.extensions:
             app.extensions['orientdb'] = self
 
-    def _connect_to_db(self):
+    @property
+    def connection(self):
         ctx = stack.top
         if hasattr(ctx, 'orientdb_client'):
-            return ctx.orientdb_client.db_open(self.current_database.db_name, self.current_database.db_username,
-                                               self.current_database.db_password)
+            return ctx.orientdb_client
+
+    def create_client(self):
+        ctx = stack.top
+        ctx.orientdb_client = OrientDBPy(self.app.config.get('ORIENTDB_HOST'), self.app.config.get('ORIENTDB_PORT'))
+
+    def set_db(self, db_name, db_username='admin', db_password='admin'):
+        self.app.config['ORIENTDB_DB'] = self.Database(db_name, db_username, db_password)
+
+    def _connect_to_db(self):
+        if self.connection:
+            return self.connection.db_open(self.app.config.get('ORIENTDB_DB').db_name, self.app.config.get('ORIENTDB_DB').db_username,
+                                           self.app.config.get('ORIENTDB_DB').db_password)
         else:
             raise Exception("tried to connect to db without client. Use set_current_db")
 
     def _teardown(self, *args):
         """Close the connection to current OrientDB database."""
-        ctx = stack.top
-        if hasattr(ctx, 'orientdb_client'):
-            ctx.orientdb_client.db_close()
+        if self.connection:
+            self.connection.db_close()
+            ctx = stack.top
             del ctx.orientdb_client
-
-    def _register_db(self, db_name, db_username, db_password):
-        if db_username == None:
-            db_username = 'admin'
-        if db_password == None:
-            db_password = 'admin'
-        Database = namedtuple('Database', 'db_name, db_username, db_password')
-        new_db = Database(db_name, db_username, db_password)
-        self.database_list.append(new_db)
-        return new_db
-
-    def set_current_db(self, db_name, db_username=None, db_password=None):
-        # TODO add way to change username/password
-        if not db_username:
-            for named_db_tuple in self.database_list:
-                if named_db_tuple.db_name == db_name:
-                    self.current_database = named_db_tuple
-                    return
-        self._register_db(db_name, db_username, db_password)
-        self.set_current_db(db_name)
-
-    def create_client(self):
-        ctx = stack.top
-        ctx.orientdb_client = OrientDBPy(self.app.config.get('ORIENTDB_HOST'),self.app.config.get('ORIENTDB_PORT'))
 
     def __getattr__(self, name, *args, **kwargs):
         ctx = stack.top
         if not ctx:
             raise Exception('No context available, call within a view function')
-        if not hasattr(ctx, 'orientdb_client'):
+        if not self.connection:
             self.create_client()
-        # if ctx.orientdb_client._connection.session_id == -1:
-        #     self.create_client()
-        # TODO review
-        ctx.orientdb_client.connect(self.app.config.get('ORIENTDB_SERVER_USERNAME'), self.app.config.get('ORIENTDB_SERVER_PASSWORD'))
-        connection_needed = ['db_size', 'db_count_records', 'command', 'query', 'data_cluster_add', 'data_cluster_count',
-                             'data_cluster_data_range', 'record_create', 'record_load', 'record_update', 'batch'
-                                    ]
+        # create new session id if it does not exist
+        if self.connection._connection.session_id == -1:
+            self.create_client()
+            ctx.orientdb_client.connect(self.app.config.get('ORIENTDB_SERVER_USERNAME'), self.app.config.get('ORIENTDB_SERVER_PASSWORD'))
+        # method names that need a database connection opened
+        connection_needed = ['db_size', 'db_count_records', 'command', 'query', 'data_cluster_add',
+                             'data_cluster_drop', 'data_cluster_count', 'data_cluster_data_range',
+                             'record_create', 'record_load', 'record_update', 'batch', 'db_reload']
         if name in connection_needed and self.app.config.get('ORIENTDB_AUTO_OPEN'):
             self._connect_to_db()
         elif name in connection_needed:
             raise Exception(
-                'Error either ORIENTDB_CURRENT_DATABASE is not configured or ORIENTDB_AUTO_OPEN is set to False')
+                'Error either ORIENTDB_DB is not configured or ORIENTDB_AUTO_OPEN is set to False')
 
         def wrapper(*args, **kw):
             if name == 'db_create':
