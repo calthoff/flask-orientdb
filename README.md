@@ -1,6 +1,6 @@
 <h3>Flask-OrientDB</h3>
 Flask-OrientDB simplifies using OrientDB with Flask by handling opening and closing your database connection
-using Pyorient a Python driver for OrientDB.
+using Pyorient, a Python driver for OrientDB.
 
 ### Installation
 
@@ -27,22 +27,25 @@ using Pyorient a Python driver for OrientDB.
 
 ### Set Database
 Username and password default to OrientDB's default 'admin', 'admin'
+    
     app = Flask(__name__)
     client = OrientDB(app=app, server_un=your_un, server_pw=your_pw)
     client.set_db('mydb', 'admin', 'my_pw')
 
 ### Pyorient Commands
 The following commands differ from pyorient:
-'graph' and 'memory' are used instead of pyorient.DB_TYPE_GRAPH and 
-pyorient.STORAGE_TYPE_MEMORY. Use 'document' to create a document database.
-You can use 'plocal' and 'local' instead of 'memory'.
+
     client.db_create( db_name, 'graph', 'memory')
     client.db_exists( db_name, 'memory')
-    
     # 'physical' is passed in instead of pyorient.CLUSTER_TYPE_PHYSICAL 
     # you can also pass in 'memory'
     new_cluster_id = client.data_cluster_add( 'my_cluster_1234567','physical')
 
+'graph' and 'memory' are used instead of pyorient.DB_TYPE_GRAPH and  <br>
+pyorient.STORAGE_TYPE_MEMORY. Pass in 'document' to db_create() to create <br>
+a document database. <br>
+You can pass in 'plocal' and 'local' instead of 'memory'. <br>
+ <br>
 Check Pyorient's documentation https://github.com/mogui/pyorient for a
 complete list of commands. 
 
