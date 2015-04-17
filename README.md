@@ -34,7 +34,7 @@ Username and password default to OrientDB's default 'admin', 'admin'
     client.set_db('mydb', 'admin', 'my_pw')
 
 ### Pyorient Commands
-The following commands differ from pyorient:    
+    #The following commands differ from pyorient:    
     # pyorient db_create   <br>
     client.db_create( db_name, pyorient.DB_TYPE_GRAPH, pyorient.STORAGE_TYPE_MEMORY ) <br>
     # flask-orientdb db_create   <br>
