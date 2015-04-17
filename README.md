@@ -26,6 +26,7 @@ using Pyorient, a Python driver for OrientDB.
     #Run create_db in the example folder to setup the db.
 
 ### Set Database
+Set the OrientDB database you want to use. 
 Username and password default to OrientDB's default 'admin', 'admin'
     
     app = Flask(__name__)
@@ -33,18 +34,27 @@ Username and password default to OrientDB's default 'admin', 'admin'
     client.set_db('mydb', 'admin', 'my_pw')
 
 ### Pyorient Commands
-The following commands differ from pyorient:
+The following commands differ from pyorient:    
+    # pyorient db_create   <br>
+    client.db_create( db_name, pyorient.DB_TYPE_GRAPH, pyorient.STORAGE_TYPE_MEMORY ) <br>
+    # flask-orientdb db_create   <br>
+    client.db_create( db_name, 'graph', 'memory')    <br>
+    <br>
+    # pyorient db_exists <br>
+    client.db_exists( db_name, pyorient.STORAGE_TYPE_MEMORY ) <br>
+    # flask-orientdb-createdb
+    client.db_exists( db_name, 'memory') <br>
+    <br>
+    # pyorient cluster_add <br>
+     client.data_cluster_add('my_cluster_1234567', pyorient.CLUSTER_TYPE_PHYSICAL <br>
+    # flask-orientdb cluster_add <br>
+    client.data_cluster_add( 'my_cluster_1234567','physical') <br>
+    
+    
 
-    client.db_create( db_name, 'graph', 'memory')
-    client.db_exists( db_name, 'memory')
-    # 'physical' is passed in instead of pyorient.CLUSTER_TYPE_PHYSICAL 
-    # you can also pass in 'memory'
-    new_cluster_id = client.data_cluster_add( 'my_cluster_1234567','physical')
-
-'graph' and 'memory' are used instead of pyorient.DB_TYPE_GRAPH and  <br>
-pyorient.STORAGE_TYPE_MEMORY. Pass in 'document' to db_create() to create <br>
-a document database. <br>
-You can pass in 'plocal' and 'local' instead of 'memory'. <br>
+flask-orientdb options for db_create: 'graph', 'document'. <br>
+flask-orientdb options for db_exists: 'memory', 'local', 'plocal' <br>
+flask-orientdb options for cluster_add: 'physical', 'memory' <br>
  <br>
 Check Pyorient's documentation https://github.com/mogui/pyorient for a
 complete list of commands. 

@@ -3,7 +3,7 @@ from flask import Flask
 
 def setup_db():
     client.db_create('animal', 'graph', 'plocal')
-    client.set_current_db('animal')
+    client.set_db('animal')
     # Create the Vertex Animal
     client.command("create class Animal extends V")
 

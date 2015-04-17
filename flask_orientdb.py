@@ -1,5 +1,6 @@
 from pyorient import OrientDB as OrientDBPy
 import pyorient
+
 try:
     from flask import _app_ctx_stack as stack
 except ImportError:
@@ -7,25 +8,37 @@ except ImportError:
 from collections import namedtuple
 
 
-def db_create(name, type, memory):
-    if type == 'graph':
-        db_type = pyorient.DB_TYPE_GRAPH
-    elif type == 'document':
-        db_type =pyorient.DB_TYPE_DOCUMENT
-    else:
-        raise Exception('invalid argument provided to create_db()')
+def convert_memory_location(memory):
     if memory == 'local':
         memory_location = pyorient.STORAGE_TYPE_LOCAL
     elif memory == 'plocal':
-        memory_location  = pyorient.STORAGE_TYPE_PLOCAL
+        memory_location = pyorient.STORAGE_TYPE_PLOCAL
     elif memory == 'memory':
         memory_location = pyorient.STORAGE_TYPE_MEMORY
     else:
         raise Exception('invalid argument provided to createdb()')
-    return name, db_type, memory_location
+    return memory_location
 
 
-def data_cluster_add(cluster_name, type):
+def _db_create(name, type, memory):
+    """
+    :return name, db_type, and memory_location to be used as arguments in
+    OrientDB.connection.db_create(name, type, memory)
+    """
+    if type == 'graph':
+        db_type = pyorient.DB_TYPE_GRAPH
+    elif type == 'document':
+        db_type = pyorient.DB_TYPE_DOCUMENT
+    else:
+        raise Exception('invalid argument provided to create_db()')
+    return name, db_type, convert_memory_location(memory)
+
+
+def _data_cluster_add(cluster_name, type):
+    """
+     :return name, db_type, and memory_location to be used as arguments in
+    OrientDB.connection._data_cluster_add(cluster_name, cluster_type)
+    """
     if type == 'physical':
         cluster_type = pyorient.CLUSTER_TYPE_PHYSICAL
     elif type == 'memory':
@@ -34,6 +47,16 @@ def data_cluster_add(cluster_name, type):
 
 
 class OrientDB(object):
+    """
+    Creates class that manages OrientDB database connections with Flask.
+    :param app: The Flask application bound to this OrientDB instance.
+                If an app is not provided at initialization time than it
+                must be provided later by calling :meth:`init_app` manually.
+    :param server_un: username for your OrientDB server
+    :param server_pw: password for your OrientDB server
+    :param host: host of your OrientDB server
+    :param port: port for your OrientDB server
+    """
     def __init__(self, app=None, server_un='root', server_pw=None, host='localhost', port=2424):
         self.Database = namedtuple('Database', 'db_name, db_username, db_password')
         if app is not None:
@@ -43,7 +66,7 @@ class OrientDB(object):
 
     def init_app(self, app, server_pw, server_un='root', host='localhost', port=2424):
         """
-        Sets up configuration and adds teardown methods to Flask.
+        params: see OrientDB docstring
         """
         if not app:
             raise Exception('pass in a flask app')
@@ -66,55 +89,92 @@ class OrientDB(object):
 
     @property
     def connection(self):
+        """
+        :return OrientDB client that is used to execute all Pyorient commands.
+        """
         ctx = stack.top
         if hasattr(ctx, 'orientdb_client'):
             return ctx.orientdb_client
 
-    def create_client(self):
+    def _create_client(self):
+        """
+        create OrientDB client that is used to execute all Pyorient commands.
+        """
         ctx = stack.top
-        ctx.orientdb_client = OrientDBPy(self.app.config.get('ORIENTDB_HOST'), self.app.config.get('ORIENTDB_PORT'))
+        ctx.orientdb_client = OrientDBPy(self.app.config.get('ORIENTDB_HOST'),
+                                        self.app.config.get('ORIENTDB_PORT'))
 
     def set_db(self, db_name, db_username='admin', db_password='admin'):
+        """
+        :param db_name: name of the OrientDB database you want to use
+        :param db_username: username for the OrientDB database you want to use
+        :param db_password: password for the OrientDB database you want to use
+        """
         self.app.config['ORIENTDB_DB'] = self.Database(db_name, db_username, db_password)
 
     def _connect_to_db(self):
+        """
+        call db_open on OrientDB client
+        """
         if self.connection:
-            return self.connection.db_open(self.app.config.get('ORIENTDB_DB').db_name, self.app.config.get('ORIENTDB_DB').db_username,
+            self.connection.db_open(self.app.config.get('ORIENTDB_DB').db_name,
+                                           self.app.config.get('ORIENTDB_DB').db_username,
                                            self.app.config.get('ORIENTDB_DB').db_password)
         else:
-            raise Exception("tried to connect to db without client. Use set_current_db")
+            self._create_client()
+            # raise Exception("tried to connect to db without client. Use set_current_db")
 
     def _teardown(self, *args):
-        """Close the connection to current OrientDB database."""
+        """
+        Close the connection to OrientDB database and delete OrientDB client
+        """
         if self.connection:
             self.connection.db_close()
             ctx = stack.top
             del ctx.orientdb_client
 
     def __getattr__(self, name, *args, **kwargs):
+        """
+        :param name: name of the method called
+        :param args: parameters to pass to OrientDB client
+        :param kwargs:parameters to pass to OrientDB client
+        :return: function that calls the name of the method passed in on the OrientDB client using
+        the arguments passed in.
+        """
         ctx = stack.top
         if not ctx:
             raise Exception('No context available, call within a view function')
         if not self.connection:
-            self.create_client()
+            self._create_client()
         # create new session id if it does not exist
         if self.connection._connection.session_id == -1:
-            self.create_client()
-            ctx.orientdb_client.connect(self.app.config.get('ORIENTDB_SERVER_USERNAME'), self.app.config.get('ORIENTDB_SERVER_PASSWORD'))
+            self._create_client()
+            ctx.orientdb_client.connect(self.app.config.get('ORIENTDB_SERVER_USERNAME'),
+                                        self.app.config.get('ORIENTDB_SERVER_PASSWORD'))
         # method names that need a database connection opened
         connection_needed = ['db_size', 'db_count_records', 'command', 'query', 'data_cluster_add',
-                             'data_cluster_drop', 'data_cluster_count', 'data_cluster_data_range',
-                             'record_create', 'record_load', 'record_update', 'batch', 'db_reload']
-        if name in connection_needed and self.app.config.get('ORIENTDB_AUTO_OPEN'):
+                             'data_cluster_count', 'data_cluster_data_range', 'record_create',
+                             'record_load', 'record_update', 'batch', 'db_reload', 'set_session_token']
+        if name in connection_needed and self.app.config.get('ORIENTDB_AUTO_OPEN') \
+                and not self.connection._connection.in_transaction:
             self._connect_to_db()
-        elif name in connection_needed:
+        elif name in connection_needed and not self.connection._connection.in_transaction:
             raise Exception(
-                'Error either ORIENTDB_DB is not configured or ORIENTDB_AUTO_OPEN is set to False')
+                'database needs to be opened eitherORIENTDB_DB is not configured or \
+                ORIENTDB_AUTO_OPEN is set to False')
 
         def wrapper(*args, **kw):
             if name == 'db_create':
-                args = db_create(args[0], args[1], args[2])
+                if len(args) != 3:
+                    raise Exception('db_create takes 3 arguments')
+                args = _db_create(args[0], args[1], args[2])
             if name == 'data_cluster_add':
-                args = data_cluster_add(args[0], args[1])
+                if len(args) != 2:
+                    raise Exception('db_cluster_add takes 3 arguments')
+                args = _data_cluster_add(args[0], args[1])
+            if name == 'db_exists':
+                if len(args) != 2:
+                    raise Exception('db_exists takes 2 arguments')
+                args = (args[0], convert_memory_location(args[1]))
             return getattr(ctx.orientdb_client, name)(*args, **kw)
         return wrapper

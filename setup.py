@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name='Flask-OrientDB',
-    py_modules=['Flask-OrientDB'],
+    py_modules=['flask_orientdb'],
     version='0.1',
     license='BSD',
     description='A Flask extension for using OrientDB with Flask',
@@ -11,8 +11,7 @@ setup(
     author='Cory Althoff',
     author_email='coryedwardalthoff@gmail.com',
     url='http://github.com/calthoff/flask-orientdb',
-    py_modules=['flask_orientdb'],
-    install_requires= ['Flask', 'pyorient'],
+    install_requires= ['Flask', 'pyorient==1.4'],
     zip_safe=False,
     include_package_data=True,
     platforms='any',
