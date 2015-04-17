@@ -46,7 +46,7 @@ The following commands differ from pyorient:
     client.db_exists( db_name, 'memory') <br>
     <br>
     # pyorient cluster_add <br>
-     client.data_cluster_add('my_cluster_1234567', pyorient.CLUSTER_TYPE_PHYSICAL <br>
+    client.data_cluster_add('my_cluster_1234567', pyorient.CLUSTER_TYPE_PHYSICAL <br>
     # flask-orientdb cluster_add <br>
     client.data_cluster_add( 'my_cluster_1234567','physical') <br>
     
