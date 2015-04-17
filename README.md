@@ -34,21 +34,22 @@ Username and password default to OrientDB's default 'admin', 'admin'
     client.set_db('mydb', 'admin', 'my_pw')
 
 ### Pyorient Commands
-    #The following commands differ from pyorient:    
-    # pyorient db_create   <br>
-    client.db_create( db_name, pyorient.DB_TYPE_GRAPH, pyorient.STORAGE_TYPE_MEMORY ) <br>
-    # flask-orientdb db_create   <br>
-    client.db_create( db_name, 'graph', 'memory')    <br>
-    <br>
-    # pyorient db_exists <br>
-    client.db_exists( db_name, pyorient.STORAGE_TYPE_MEMORY ) <br>
+The following commands differ from pyorient:    
+    
+    # pyorient db_create   
+    client.db_create( db_name, pyorient.DB_TYPE_GRAPH, pyorient.STORAGE_TYPE_MEMORY ) 
+    # flask-orientdb db_create  
+    client.db_create( db_name, 'graph', 'memory')   
+ 
+    # pyorient db_exists
+    client.db_exists( db_name, pyorient.STORAGE_TYPE_MEMORY )
     # flask-orientdb-createdb
-    client.db_exists( db_name, 'memory') <br>
-    <br>
-    # pyorient cluster_add <br>
-    client.data_cluster_add('my_cluster_1234567', pyorient.CLUSTER_TYPE_PHYSICAL <br>
-    # flask-orientdb cluster_add <br>
-    client.data_cluster_add( 'my_cluster_1234567','physical') <br>
+    client.db_exists( db_name, 'memory') 
+    
+    # pyorient cluster_add 
+    client.data_cluster_add('my_cluster_1234567', pyorient.CLUSTER_TYPE_PHYSICAL
+    # flask-orientdb cluster_add 
+    client.data_cluster_add( 'my_cluster_1234567','physical') 
     
     
 
