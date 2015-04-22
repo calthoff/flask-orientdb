@@ -18,13 +18,15 @@ pip install flask-orientdb
     
     @app.route("/")
     def home():
+        # connect operations can be called without 'with client.connection()'
         if not client.db_exists(db_name, db_type):
             client.db_create(db_name, 'graph', db_type)
+            
+            # db operations need to be called within 'with client.connection()'
             with client.connection():
                 client.command("CREATE CLASS Animal")
                 client.command("INSERT INTO Animal set name = 'lizard', \
                               species = 'reptile'")
-    
         with client.connection():
             result = client.query("SELECT * FROM Animal")
         return result[0].name
@@ -33,8 +35,9 @@ pip install flask-orientdb
             app.run()
 
 ### Create Client & Set Database
-Instantiating the OrientDB object creates the following configuration values stored in your Flask app
+Instantiating the OrientDB object creates the following configuration values stored in your Flask app configuration.
 
+    app = Flask(__name__)
     client = OrientDB(flask_app, server_un='root', server_pw=None, 
                      host='localhost', port=2424)
  
@@ -46,16 +49,15 @@ Instantiating the OrientDB object creates the following configuration values sto
 
 Set the OrientDB database you want to use. 
 Username and password default to OrientDB's default 'admin', 'admin'
-    
-    app = Flask(__name__)
-    client = OrientDB(app=app, server_un=your_un, server_pw=your_pw)
     client.set_db('mydb', 'admin', 'my_pw')
+    
+Change configuration
+app.config['ORIENTDB_SERVER_PASSWORD'] = my_new_pw
         
 ### Pyorient Commands
 When you are inside a Flask view function, a connection to OrientDB is established. You can use connect operations 
- from inside a view function without doing anything. Using db_open operations from inside a view function must be done 
- within 'with client.connection():' For a list of connect operations and db_open operations see 
- http://orientdb.com/docs/last/Network-Binary-Protocol.html#introduction
+from inside a view function without doing anything. Using db_open operations from inside a view function must be done within 'with client.connection():' For a list of connect operations and db_open operations see 
+http://orientdb.com/docs/last/Network-Binary-Protocol.html#introduction
  
 The following commands differ from pyorient:    
     
