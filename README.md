@@ -41,7 +41,7 @@ Instantiating the OrientDB object
     client = OrientDB(flask_app, server_un='root', server_pw=None, 
                      host='localhost', port=2424)
  
- creates the following configuration values stored in your Flask app configuration:
+ creates the following configuration values stored in your Flask app configuration: <br>
     'ORIENTDB_SERVER_PASSWORD': None <br>
     'ORIENTDB_SERVER_USERNAME': 'root' <br>
     'ORIENTDB_HOST': 'localhost' <br>
