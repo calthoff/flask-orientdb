@@ -10,7 +10,7 @@ a Python driver for OrientDB.
     
     app = Flask(__name__)
     app.debug = True
-    client = OrientDB(app=app, server_pw="B0FC9CF1CBEAD07351C4C30197C43BE2D611E94AFAFA7EF4B4AAD3262F7907DB")
+    client = OrientDB(app=app, server_pw=your_server_pw)
     db_name = 'test_db'
     db_type = 'plocal'
     client.set_db(db_name)
@@ -33,7 +33,8 @@ a Python driver for OrientDB.
 ### Create Client & Set Database
 Instantiating the OrientDB object creates the following configuration values stored in your Flask app
 
-    client = OrientDB(flask_app, server_un='root', server_pw=None, host='localhost', port=2424)
+    client = OrientDB(flask_app, server_un='root', server_pw=None, 
+                     host='localhost', port=2424)
  
 'ORIENTDB_SERVER_PASSWORD': None <br>
 'ORIENTDB_SERVER_USERNAME': 'root' <br>
