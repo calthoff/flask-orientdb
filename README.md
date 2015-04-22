@@ -1,6 +1,6 @@
 <h3>Flask-OrientDB</h3>
-Flask-OrientDB simplifies using OrientDB with Flask by handling opening and closing your database connection
-using Pyorient, a Python driver for OrientDB.
+Flask-OrientDB simplifies using OrientDB with Flask by providing an interface between Flask and Pyorient, 
+a Python driver for OrientDB.
 
 ### Installation
 
@@ -9,31 +9,51 @@ using Pyorient, a Python driver for OrientDB.
     from flask.ext.orientdb import OrientDB
     
     app = Flask(__name__)
-    client = OrientDB(app=app, server_un=your_un, server_pw=your_pw)
-  
+    app.debug = True
+    client = OrientDB(app=app, server_pw="B0FC9CF1CBEAD07351C4C30197C43BE2D611E94AFAFA7EF4B4AAD3262F7907DB")
+    db_name = 'test_db'
+    db_type = 'plocal'
+    client.set_db(db_name)
+    
     @app.route("/")
-    def cheese_eating_animals():
-        client.set_db('animal', 'admin', 'my_pw')
-        client.query("select * from Animal")
-        cheese_eaters = client.command("select expand( in( Eat )) \
-        from Food where name = 'pea'")
-        return ','.join([cheese_eaters[0].name, cheese_eaters[0].species])
+    def home():
+        if not client.db_exists(db_name, db_type):
+            client.db_create(db_name, 'graph', db_type)
+            with client.connection():
+                client.command("CREATE CLASS Animal")
+                client.command("INSERT INTO Animal set name = 'lizard', species = 'reptile'")
+    
+        with client.connection():
+            result = client.query("SELECT * FROM Animal")
+        return result[0].name
     
     if __name__ == "__main__":
             app.run()
-            
-    #For this example to work you need a database and schema set up.
-    #Run create_db in the example folder to setup the db.
 
-### Set Database
+### Create Client & Set Database
+Instantiating the OrientDB object creates the following configuration values stored in your Flask app
+
+    client = OrientDB(flask_app, server_un='root', server_pw=None, host='localhost', port=2424)
+ 
+'ORIENTDB_SERVER_PASSWORD': None <br>
+'ORIENTDB_SERVER_USERNAME': 'root' <br>
+'ORIENTDB_HOST': 'localhost' <br>
+'ORIENTDB_PORT': '2424'  <br>
+'ORIENTDB_DB': None
+
 Set the OrientDB database you want to use. 
 Username and password default to OrientDB's default 'admin', 'admin'
     
     app = Flask(__name__)
     client = OrientDB(app=app, server_un=your_un, server_pw=your_pw)
     client.set_db('mydb', 'admin', 'my_pw')
-
+        
 ### Pyorient Commands
+When you are inside a Flask view function, a connection to OrientDB is established. You can use connect operations 
+ from inside a view function without doing anything. Using db_open operations from inside a view function must be done 
+ within 'with client.connection():' For a list of connect operations and db_open operations see 
+ http://orientdb.com/docs/last/Network-Binary-Protocol.html#introduction
+ 
 The following commands differ from pyorient:    
     
     # pyorient db_create   
@@ -58,17 +78,4 @@ flask-orientdb options for db_exists: 'memory', 'local', 'plocal' <br>
 flask-orientdb options for cluster_add: 'physical', 'memory' <br>
  <br>
 Check Pyorient's documentation https://github.com/mogui/pyorient for a
-complete list of commands. 
-
-
-### Default Configuration Values
-'ORIENTDB_AUTO_OPEN': True <br>
-'ORIENTDB_SERVER_PASSWORD': None <br>
-'ORIENTDB_SERVER_USERNAME': 'root' <br>
-'ORIENTDB_HOST': 'localhost' <br>
-'ORIENTDB_PORT': '2424'  <br>
-'ORIENTDB_DB': None
-
-Set 'ORIENTDB_AUTO_OPEN' to False to stop Flask_OrientDB from automatically
-opening a database connection to self.current_database when a method requiring
-a database connection is called.
+complete list of commands.
