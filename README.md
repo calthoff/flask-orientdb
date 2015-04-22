@@ -22,7 +22,7 @@ pip install flask-orientdb
             client.db_create(db_name, 'graph', db_type)
             with client.connection():
                 client.command("CREATE CLASS Animal")
-                client.command("INSERT INTO Animal set name = 'lizard', 
+                client.command("INSERT INTO Animal set name = 'lizard', \
                               species = 'reptile'")
     
         with client.connection():
