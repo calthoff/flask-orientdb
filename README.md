@@ -35,17 +35,18 @@ pip install flask-orientdb
             app.run()
 
 ### Create Client & Set Database
-Instantiating the OrientDB object creates the following configuration values stored in your Flask app configuration.
+Instantiating the OrientDB object 
 
     app = Flask(__name__)
     client = OrientDB(flask_app, server_un='root', server_pw=None, 
                      host='localhost', port=2424)
  
-'ORIENTDB_SERVER_PASSWORD': None <br>
-'ORIENTDB_SERVER_USERNAME': 'root' <br>
-'ORIENTDB_HOST': 'localhost' <br>
-'ORIENTDB_PORT': '2424'  <br>
-'ORIENTDB_DB': None
+ creates the following configuration values stored in your Flask app configuration:
+    'ORIENTDB_SERVER_PASSWORD': None <br>
+    'ORIENTDB_SERVER_USERNAME': 'root' <br>
+    'ORIENTDB_HOST': 'localhost' <br>
+    'ORIENTDB_PORT': '2424'  <br>
+    'ORIENTDB_DB': None
 
 Set the OrientDB database you want to use. 
 Username and password default to OrientDB's default 'admin', 'admin'
