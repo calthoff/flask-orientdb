@@ -49,10 +49,12 @@ Instantiating the OrientDB object creates the following configuration values sto
 
 Set the OrientDB database you want to use. 
 Username and password default to OrientDB's default 'admin', 'admin'
+
     client.set_db('mydb', 'admin', 'my_pw')
     
 Change configuration
-app.config['ORIENTDB_SERVER_PASSWORD'] = my_new_pw
+
+    app.config['ORIENTDB_SERVER_PASSWORD'] = my_new_pw
         
 ### Pyorient Commands
 When you are inside a Flask view function, a connection to OrientDB is established. You can use connect operations 
