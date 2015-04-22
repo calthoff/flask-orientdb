@@ -3,6 +3,7 @@ Flask-OrientDB simplifies using OrientDB with Flask by providing an interface be
 a Python driver for OrientDB.
 
 ### Installation
+pip install flask-orientdb
 
 ### Example 
     from flask import Flask
@@ -21,7 +22,8 @@ a Python driver for OrientDB.
             client.db_create(db_name, 'graph', db_type)
             with client.connection():
                 client.command("CREATE CLASS Animal")
-                client.command("INSERT INTO Animal set name = 'lizard', species = 'reptile'")
+                client.command("INSERT INTO Animal set name = 'lizard', 
+                              species = 'reptile'")
     
         with client.connection():
             result = client.query("SELECT * FROM Animal")
