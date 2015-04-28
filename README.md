@@ -87,3 +87,7 @@ flask-orientdb options for cluster_add: 'physical', 'memory' <br>
  <br>
 Check Pyorient's documentation https://github.com/mogui/pyorient for a
 complete list of commands.
+
+### Contribute
+Pull requests are welcome. <br>
+Feedback and comments are appreciated. Send to coryedwardalthoff@gmail.com.
