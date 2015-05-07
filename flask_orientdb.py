@@ -9,15 +9,12 @@ from collections import namedtuple
 
 
 def convert_memory_location(memory):
-    if memory == 'local':
-        memory_location = pyorient.STORAGE_TYPE_LOCAL
-    elif memory == 'plocal':
-        memory_location = pyorient.STORAGE_TYPE_PLOCAL
-    elif memory == 'memory':
-        memory_location = pyorient.STORAGE_TYPE_MEMORY
+    memory_dict = {'local': pyorient.STORAGE_TYPE_LOCAL, 'plocal': pyorient.STORAGE_TYPE_PLOCAL,
+                   'memory': pyorient.STORAGE_TYPE_MEMORY}
+    if memory in memory_dict:
+        return memory_dict[memory]
     else:
         raise Exception('invalid argument provided to createdb()')
-    return memory_location
 
 
 def _db_create(name, type, memory):
@@ -25,13 +22,11 @@ def _db_create(name, type, memory):
     :return name, db_type, and memory_location to be used as arguments in
     OrientDB.orientdb_client.db_create(name, type, memory)
     """
-    if type == 'graph':
-        db_type = pyorient.DB_TYPE_GRAPH
-    elif type == 'document':
-        db_type = pyorient.DB_TYPE_DOCUMENT
+    type_dict = {'graph': pyorient.DB_TYPE_GRAPH, 'document':pyorient.DB_TYPE_DOCUMENT}
+    if type in type_dict:
+        return name, type_dict[type], convert_memory_location(memory)
     else:
         raise Exception('invalid argument provided to create_db()')
-    return name, db_type, convert_memory_location(memory)
 
 
 def _data_cluster_add(cluster_name, type):
@@ -39,11 +34,11 @@ def _data_cluster_add(cluster_name, type):
      :return name, db_type, and memory_location to be used as arguments in
     OrientDB.orientdb_client._data_cluster_add(cluster_name, cluster_type)
     """
-    if type == 'physical':
-        cluster_type = pyorient.CLUSTER_TYPE_PHYSICAL
-    elif type == 'memory':
-        cluster_type = pyorient.CLUSTER_TYPE_MEMORY
-    return cluster_name, cluster_type
+    cluster_dict = {'physical': pyorient.CLUSTER_TYPE_PHYSICAL, 'memory': pyorient.CLUSTER_TYPE_MEMORY}
+    if type in cluster_dict:
+        return cluster_name, cluster_dict[type]
+    else:
+        raise Exception("invalid argument provided to data_cluster_add")
 
 
 class OrientDB(object):
