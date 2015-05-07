@@ -60,7 +60,7 @@ Change configuration
 ### Connection
 When you are inside a Flask view function, a connection to OrientDB is established. You can use connect operations 
 from inside a view function without doing anything. Using db_open operations from inside a view function must be done within 'with client.connection():' For a list of connect operations and db_open operations see 
-http://orientdb.com/docs/last/Network-Binary-Protocol.html#introduction. <b>Do not call connect operations within 'with client.connection(), only use db_open operations.' </b>
+http://orientdb.com/docs/last/Network-Binary-Protocol.html#introduction. <b>Do not call connect operations within 'with client.connection()', only use db_open operations.</b>
 
 
 ### Pyorient Commands
